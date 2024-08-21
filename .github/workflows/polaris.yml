@@ -1,0 +1,44 @@
+# Static analysis using Polaris on pull requests to master
+
+name: Polaris Scan
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 7 * * 0'
+  pull_request:
+
+jobs:
+  security:
+    name: Static analysis
+    runs-on: [self-hosted, polaris]
+
+    steps:    
+    # Checkout
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.6' 
+        
+    # Export secrets, download polaris client and analyze
+    - name: Static Analysis with Polaris
+      run: |
+        export GIT_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+        export POLARIS_SERVER_URL=${{secrets.POLARIS_SERVER_URL}}
+        export POLARIS_ACCESS_TOKEN=${{secrets.POLARIS_ACCESS_TOKEN}}
+        polaris analyze
+        
+  cleanup:
+    name: Cleanup
+    if: always() # Runs the cleanup even if the needed job fails
+    needs: security
+    runs-on: [self-hosted, polaris]
+    
+    steps:
+    - name: Cleanup
+      run: |
+        rm -r ../api-examples-python
+        
