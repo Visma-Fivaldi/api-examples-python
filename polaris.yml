@@ -1,0 +1,28 @@
+version: "1"
+project:
+  name: ${scm.git.repo}
+  branch: ${scm.git.branch}
+  revision:
+    name: ${scm.git.commit}
+    date: ${scm.git.commit.date}
+  properties:
+    GROUP: j4ir0k5itl421eajrbebkkrf40
+    PSC_ID: "1150"
+capture:
+  fileSystem:
+    python:
+      files:
+      - directory: ${project.projectDir}
+analyze:
+  mode: central
+  coverity:
+    caching:
+      dlls: disable
+      jars: disable
+      pfi: disable
+      rws: disable
+      tu-caching: disable
+install:
+  coverity:
+    version: default
+serverUrl: https://visma.polaris.synopsys.com
