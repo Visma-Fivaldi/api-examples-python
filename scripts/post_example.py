@@ -24,7 +24,7 @@ def send_post_request(partner_id, unix_epoch, signature, api_url, content_type, 
         'X-Fivaldi-Timestamp': unix_epoch,
         'Authorization': f"Fivaldi {signature}"
     }
-    
+
     req = Request(api_url, data=body.encode(), headers=headers, method='POST')
     with urlopen(req) as response:
         print(f"HTTP Status code: {response.status}")
@@ -38,7 +38,8 @@ def main():
     partner_id = os.getenv('PARTNER_ID')
     partner_secret = os.getenv('PARTNER_SECRET')
     unix_epoch = str(int(time.time()))
-    api_endpoint = '/customer/api/companies/3F9B912AA31C14AEE05310328C0ABC7A/customers/createCustomer'
+    cuid = "1234" # Provide a cuid which the partner id has permissions for
+    api_endpoint = f"/customer/api/companies/{cuid}/customers/createCustomer"
     api_url = f"https://api.fivaldi.net{api_endpoint}"
     content_type = 'application/json'
     

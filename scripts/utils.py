@@ -5,7 +5,7 @@ import base64
 # Unix line feed character used for constructing the signing string.
 LF = '\n'
 
-def generate_signature(partner_id, partner_secret, http_method, unix_epoch, api_endpoint, body=None, content_type=None):
+def generate_signature(partner_id, partner_secret, http_method, unix_epoch, api_endpoint, content_type=None, body=None):
     """
     Generates an HMAC-SHA256 signature for API request authorization.
 
