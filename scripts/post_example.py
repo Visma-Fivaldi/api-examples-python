@@ -1,8 +1,9 @@
+import os
+import time
 from urllib.request import Request, urlopen
 import json
 from utils import generate_signature
-import os
-import time
+
 
 # This script demonstrates sending a POST request to an API with a JSON body and a signature for authentication.
 
@@ -30,6 +31,7 @@ def send_post_request(partner_id, unix_epoch, signature, api_url, content_type, 
         print(f"HTTP Status code: {response.status}")
         print(f"HTTP Response body: {response.read().decode()}")
 
+
 def main():
     """
     Main execution function: reads environment variables, reads and prepares the request body, generates a signature,
@@ -38,21 +40,22 @@ def main():
     partner_id = os.getenv('PARTNER_ID')
     partner_secret = os.getenv('PARTNER_SECRET')
     unix_epoch = str(int(time.time()))
-    cuid = "1234" # Provide a cuid which the partner id has permissions for
+    cuid = "1234"  # Provide a cuid which the partner id has permissions for
     api_endpoint = f"/customer/api/companies/{cuid}/customers/createCustomer"
     api_url = f"https://api.fivaldi.net{api_endpoint}"
     content_type = 'application/json'
-    
+
     # Reading and preparing JSON body from a file
     with open('body.json', 'r', encoding='utf8') as file:
         body = json.dumps(json.load(file))
-    
+
     # Generating the signature for the POST request
     signature = generate_signature(partner_id, partner_secret, 'POST', unix_epoch, api_endpoint, content_type, body)
     print(f'Signature: {signature}')
-    
+
     # Sending the POST request and printing the API response
     send_post_request(partner_id, unix_epoch, signature, api_url, content_type, body)
+
 
 if __name__ == '__main__':
     main()

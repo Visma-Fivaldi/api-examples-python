@@ -1,10 +1,10 @@
 from urllib.request import Request, urlopen
-import json
 from utils import generate_signature
 import os
 import time
 
-# This script demonstrates sending a GET request to an API using a signature for 
+
+# This script demonstrates sending a GET request to an API using a signature for
 # authentication and retrieving the response.
 
 def send_get_request(partner_id, unix_epoch, signature, api_url):
@@ -28,6 +28,7 @@ def send_get_request(partner_id, unix_epoch, signature, api_url):
         print(f"HTTP Status code: {response.status}")
         print(f"HTTP Response body: {response.read().decode()}")
 
+
 def main():
     """
     Main execution function: retrieves environment variables, generates a signature, 
@@ -38,13 +39,14 @@ def main():
     unix_epoch = str(int(time.time()))
     api_endpoint = '/customer/api/ping'
     api_url = f"https://api.fivaldi.net{api_endpoint}"
-    
+
     # Generating signature for the API request
     signature = generate_signature(partner_id, partner_secret, 'GET', unix_epoch, api_endpoint)
     print(f'Signature: {signature}')
-    
+
     # Sending GET request and printing the response
     send_get_request(partner_id, unix_epoch, signature, api_url)
+
 
 if __name__ == '__main__':
     main()
