@@ -1,6 +1,6 @@
 from urllib.request import Request, urlopen
 import json
-from scripts.utils import generate_signature
+from utils import generate_signature
 import os
 import time
 
@@ -20,11 +20,13 @@ def send_get_request(partner_id, unix_epoch, signature, api_url):
     headers = {
         'X-Fivaldi-Partner': partner_id,
         'X-Fivaldi-Timestamp': unix_epoch,
-        'Authorization': signature
+        'Authorization': f"Fivaldi {signature}"
     }
+
     req = Request(api_url, headers=headers, method='GET')
     with urlopen(req) as response:
-        return json.loads(response.read().decode())
+        print(f"HTTP Status code: {response.status}")
+        print(f"HTTP Response body: {response.read().decode()}")
 
 def main():
     """
@@ -35,15 +37,14 @@ def main():
     partner_secret = os.getenv('PARTNER_SECRET')
     unix_epoch = str(int(time.time()))
     api_endpoint = '/customer/api/ping'
-    api_url = f"https://nextmore.fivaldi.net{api_endpoint}"
+    api_url = f"https://api.fivaldi.net{api_endpoint}"
     
     # Generating signature for the API request
-    signature = generate_signature(partner_secret, 'GET', unix_epoch, api_endpoint)
+    signature = generate_signature(partner_id, partner_secret, 'GET', unix_epoch, api_endpoint)
     print(f'Signature: {signature}')
     
     # Sending GET request and printing the response
-    response = send_get_request(partner_id, unix_epoch, signature, api_url)
-    print(f'Response: {response}')
+    send_get_request(partner_id, unix_epoch, signature, api_url)
 
 if __name__ == '__main__':
     main()

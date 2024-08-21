@@ -1,6 +1,6 @@
 from urllib.request import Request, urlopen
 import json
-from scripts.utils import generate_signature
+from utils import generate_signature
 import os
 import time
 
@@ -22,11 +22,13 @@ def send_post_request(partner_id, unix_epoch, signature, api_url, content_type, 
         'Content-Type': content_type,
         'X-Fivaldi-Partner': partner_id,
         'X-Fivaldi-Timestamp': unix_epoch,
-        'Authorization': signature
+        'Authorization': f"Fivaldi {signature}"
     }
+    
     req = Request(api_url, data=body.encode(), headers=headers, method='POST')
     with urlopen(req) as response:
-        return json.loads(response.read().decode())
+        print(f"HTTP Status code: {response.status}")
+        print(f"HTTP Response body: {response.read().decode()}")
 
 def main():
     """
@@ -37,7 +39,7 @@ def main():
     partner_secret = os.getenv('PARTNER_SECRET')
     unix_epoch = str(int(time.time()))
     api_endpoint = '/customer/api/companies/3F9B912AA31C14AEE05310328C0ABC7A/customers/createCustomer'
-    api_url = f"https://nextmore.fivaldi.net{api_endpoint}"
+    api_url = f"https://api.fivaldi.net{api_endpoint}"
     content_type = 'application/json'
     
     # Reading and preparing JSON body from a file
@@ -45,12 +47,11 @@ def main():
         body = json.dumps(json.load(file))
     
     # Generating the signature for the POST request
-    signature = generate_signature(partner_secret, 'POST', unix_epoch, api_endpoint, content_type, body)
+    signature = generate_signature(partner_id, partner_secret, 'POST', unix_epoch, api_endpoint, content_type, body)
     print(f'Signature: {signature}')
     
     # Sending the POST request and printing the API response
-    response = send_post_request(partner_id, unix_epoch, signature, api_url, content_type, body)
-    print(f'Response: {response}')
+    send_post_request(partner_id, unix_epoch, signature, api_url, content_type, body)
 
 if __name__ == '__main__':
     main()

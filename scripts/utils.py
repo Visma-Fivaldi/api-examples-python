@@ -5,10 +5,11 @@ import base64
 # Unix line feed character used for constructing the signing string.
 LF = '\n'
 
-def generate_signature(partner_secret, http_method, unix_epoch, api_endpoint, body=None, content_type=None):
+def generate_signature(partner_id, partner_secret, http_method, unix_epoch, api_endpoint, body=None, content_type=None):
     """
     Generates an HMAC-SHA256 signature for API request authorization.
 
+    :param partner_id: Partner ID used in the request header.
     :param partner_secret: Secret key for HMAC generation.
     :param http_method: HTTP method ("GET", "POST", etc.).
     :param unix_epoch: Current UNIX epoch time as a string.
@@ -24,7 +25,7 @@ def generate_signature(partner_secret, http_method, unix_epoch, api_endpoint, bo
         body_hash = ''
     
     # Construct the string to be signed according to the expected format.
-    string_to_sign = f'{http_method}{LF}{body_hash}{LF}{content_type or ""}{LF}{unix_epoch}{LF}{api_endpoint}'
+    string_to_sign = f'{http_method}{LF}{body_hash}{LF}{content_type or ''}{LF}x-fivaldi-partner:{partner_id}{LF}x-fivaldi-timestamp:{unix_epoch}{LF}{api_endpoint}'
     
     # Generate the HMAC-SHA256 signature from the 'string_to_sign'.
     signature = hmac.new(partner_secret.encode('utf-8'), string_to_sign.encode('utf-8'), hashlib.sha256).digest()
