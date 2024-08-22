@@ -19,7 +19,7 @@ Pull requests are the best way to propose changes to the codebase.
 
 In short, when you submit code changes, your submissions are understood to be under the same [LICENSE](LICENSE) that covers the project.
 
-## Report bugs using Github's issues
+## Report bugs using GitHub's issues
 
 We use GitHub issues to track public bugs. Report a bug by opening a new issue.
 

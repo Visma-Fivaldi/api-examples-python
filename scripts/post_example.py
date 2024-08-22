@@ -1,15 +1,19 @@
+import json
 import os
 import time
 from urllib.request import Request, urlopen
-import json
+
 from utils import generate_signature
 
 
-# This script demonstrates sending a POST request to an API with a JSON body and a signature for authentication.
+# This script demonstrates sending a POST request to an API with a JSON body
+# and a signature for authentication.
 
-def send_post_request(partner_id, unix_epoch, signature, api_url, content_type, body):
+def send_post_request(partner_id, unix_epoch, signature, api_url, content_type,
+                      body):
     """
-    Sends a POST request to the specified API URL with custom authentication headers and a JSON body.
+    Sends a POST request to the specified API URL with custom authentication
+    headers and a JSON body.
 
     :param partner_id: Partner ID used in the request header.
     :param unix_epoch: Current UNIX timestamp.
@@ -19,12 +23,9 @@ def send_post_request(partner_id, unix_epoch, signature, api_url, content_type, 
     :param body: JSON string to be sent as the request body.
     :return: JSON response from the API.
     """
-    headers = {
-        'Content-Type': content_type,
-        'X-Fivaldi-Partner': partner_id,
-        'X-Fivaldi-Timestamp': unix_epoch,
-        'Authorization': f"Fivaldi {signature}"
-    }
+    headers = {'Content-Type': content_type, 'X-Fivaldi-Partner': partner_id,
+               'X-Fivaldi-Timestamp': unix_epoch,
+               'Authorization': f"Fivaldi {signature}"}
 
     req = Request(api_url, data=body.encode(), headers=headers, method='POST')
     with urlopen(req) as response:
@@ -34,8 +35,9 @@ def send_post_request(partner_id, unix_epoch, signature, api_url, content_type, 
 
 def main():
     """
-    Main execution function: reads environment variables, reads and prepares the request body, generates a signature,
-    and sends a POST request to an API endpoint.
+    Main execution function: reads environment variables, reads and prepares
+    the request body, generates a signature, and sends a POST request to an
+    API endpoint.
     """
     partner_id = os.getenv('PARTNER_ID')
     partner_secret = os.getenv('PARTNER_SECRET')
@@ -50,11 +52,14 @@ def main():
         body = json.dumps(json.load(file))
 
     # Generating the signature for the POST request
-    signature = generate_signature(partner_id, partner_secret, 'POST', unix_epoch, api_endpoint, content_type, body)
+    signature = generate_signature(partner_id, partner_secret, 'POST',
+                                   unix_epoch, api_endpoint, content_type,
+                                   body)
     print(f'Signature: {signature}')
 
     # Sending the POST request and printing the API response
-    send_post_request(partner_id, unix_epoch, signature, api_url, content_type, body)
+    send_post_request(partner_id, unix_epoch, signature, api_url, content_type,
+                      body)
 
 
 if __name__ == '__main__':
