@@ -2,6 +2,8 @@
 
 This repository contains Python examples demonstrating how to interact with our API, including how to authenticate and how to send requests.
 
+The API documentation can be found [here](https://support.fivaldi.fi/fi/support/solutions/articles/77000567542-visma-fivaldi-api).
+
 ## Requirements
 
 - Python 3.6 or higher
