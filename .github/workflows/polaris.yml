@@ -36,9 +36,9 @@ jobs:
     # Export secrets, download polaris client and analyze
     - name: Static Analysis with Polaris
       run: |
-          export POLARIS_SERVER_URL=${{secrets.POLARIS_SERVER_URL}}
-          export POLARIS_ACCESS_TOKEN=${{secrets.POLARIS_ACCESS_TOKEN}}
-          wget -q ${{secrets.POLARIS_SERVER_URL}}/api/tools/polaris_cli-linux64.zip
-          unzip -j -o polaris_cli-linux64.zip -d /tmp
-          /tmp/polaris analyze
+        export POLARIS_SERVER_URL=${{secrets.POLARIS_SERVER_URL}}
+        export POLARIS_ACCESS_TOKEN=${{secrets.POLARIS_ACCESS_TOKEN}}
+        wget -q ${{secrets.POLARIS_SERVER_URL}}/api/tools/polaris_cli-linux64.zip
+        unzip -j -o polaris_cli-linux64.zip -d /tmp
+        /tmp/polaris analyze
         
