@@ -1,11 +1,9 @@
-# Static analysis using Polaris on pull requests to master
+# Static analysis using Polaris
 
 name: Polaris Scan
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [master]
   schedule:
     - cron: '0 7 * * 0'
 
@@ -14,18 +12,9 @@ jobs:
     name: Static analysis
     runs-on: ubuntu-latest
 
-    steps:
-    # Checkout to source branch on pull request
-    - name: Checkout repository on PR
-      if: ${{ github.event_name == 'pull_request' }}
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        ref: ${{ github.event.pull_request.head.ref }}
-      
+    steps:      
     # Checkout
     - name: Checkout
-      if: ${{ github.event_name != 'pull_request' }}
       uses: actions/checkout@v2
       
     - name: Set up Python
